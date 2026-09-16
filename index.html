@@ -41,20 +41,56 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "파일 변환 센터 | 서버 업로드 없는 무료 무제한 이미지·포맷 변환기 (Convert Hub)",
-  "url": "https://convert-hub.enjoy-onepage.com/",
-  "description": "JPG, PNG, WebP, AVIF, GIF 상호 변환 및 용량 압축. 업로드 대기 시간 0초, 일일 횟수 제한 0회, 100% 브라우저 메모리 로컬 변환 허브입니다.",
-  "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "All",
-  "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "KRW"
-  }
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://convert-hub.enjoy-onepage.com/#webapp",
+      "name": "Convert Hub",
+      "url": "https://convert-hub.enjoy-onepage.com/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "description": "JPG, PNG, WebP, AVIF, GIF 상호 변환 및 용량 압축. 업로드 대기 시간 0초, 일일 횟수 제한 0회, 100% 브라우저 메모리 로컬 변환 허브입니다.",
+      "image": "https://convert-hub.enjoy-onepage.com/og-image.png",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://convert-hub.enjoy-onepage.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "하루 변환 횟수나 파일 크기 제한이 있나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "사용자의 컴퓨터 브라우저 자원을 직접 사용하므로 하루 횟수 제한, 파일 용량 제한, 과금 유도가 일절 없는 완전 무료 도구입니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "아이폰 HEIC 사진도 변환이 가능한가요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "일반적인 JPG, PNG, WebP, BMP, GIF 상호 변환을 지원하며, 최신 크롬/사파리 환경에서 지원하는 모든 웹 표준 이미지를 즉시 변환할 수 있습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "투명 배경이 있는 PNG를 JPG로 바꾸면 어떻게 되나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "JPG는 투명 채널(Alpha)을 지원하지 않으므로 투명 영역은 자동으로 깔끔한 흰색(#FFFFFF) 배경으로 합성되어 저장됩니다."
+          }
+        }
+      ]
+    }
+  ]
 }
-</script>
+  </script>
 <meta content="https://convert-hub.enjoy-onepage.com/og-image.png" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="파일 변환 센터 - 100% 무료 무제한 포맷 변환기" name="twitter:title"/><meta content="서버 전송 0바이트! 브라우저 로컬에서 안전하고 빠르게 이미지 포맷을 변환하고 용량을 압축하세요." name="twitter:description"/><meta content="https://convert-hub.enjoy-onepage.com/og-image.png" name="twitter:image"/></head>
 <body class="bg-slate-950 text-slate-100 antialiased min-h-screen flex flex-col font-sans">
 <!-- 상단 슬림 띠배너 (Top Slim Banner: 3824727725, 50~60px 고정) -->
