@@ -90,7 +90,7 @@
           "name": "아이폰 HEIC 사진도 변환이 가능한가요?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "쓰고 있는 브라우저가 열 수 있는 이미지만 변환됩니다. HEIC 파일이 열리지 않으면 JPG로 바꾼 사진을 올려 주세요. 결과는 WebP·JPG·PNG로 저장하며, AVIF는 브라우저가 AVIF 저장을 지원할 때만 됩니다."
+            "text": "쓰고 있는 브라우저가 열 수 있는 이미지만 변환됩니다. HEIC 파일이 열리지 않으면 JPG로 바꾼 사진을 올려 주세요. 결과 형식은 WebP·JPG·PNG·AVIF 중에서 고를 수 있고, 브라우저가 고른 형식으로 저장하지 못하면 PNG로 저장한 뒤 화면에 알려 줍니다."
           }
         },
         {
@@ -178,7 +178,7 @@
 <div class="w-14 h-14 mx-auto rounded-2xl bg-lime-950 text-lime-400 flex items-center justify-center text-2xl mb-3 border border-lime-800">
 <i class="fa-solid fa-file-arrow-up"></i>
 </div>
-<p class="text-sm font-bold text-slate-200">변환할 이미지 파일을 여기에 끌어다 놓으세요</p>
+<p class="text-sm font-bold text-slate-200">변환할 이미지 파일을 여기에 끌어다 놓거나 눌러서 고르세요</p>
 <p class="text-xs text-slate-500 mt-1">JPG, PNG, WebP, GIF, BMP, AVIF 지원 (무제한 무료)</p>
 <div class="mt-4 flex items-center justify-center gap-2 text-[11px] text-lime-400">
 <i class="fa-solid fa-gauge-high"></i>
@@ -357,7 +357,7 @@
 </div>
 <div class="border border-slate-200 dark:border-slate-700 rounded-xl p-4 bg-white dark:bg-slate-800">
 <h4 class="font-semibold text-slate-800 dark:text-slate-100 text-sm mb-1">Q. 아이폰 HEIC 사진도 변환이 가능한가요?</h4>
-<p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">A. 쓰고 있는 브라우저가 열 수 있는 이미지만 변환됩니다. HEIC 파일이 열리지 않으면 JPG로 바꾼 사진을 올려 주세요. 결과는 WebP·JPG·PNG로 저장하며, AVIF는 브라우저가 AVIF 저장을 지원할 때만 됩니다.</p>
+<p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">A. 쓰고 있는 브라우저가 열 수 있는 이미지만 변환됩니다. HEIC 파일이 열리지 않으면 JPG로 바꾼 사진을 올려 주세요. 결과 형식은 WebP·JPG·PNG·AVIF 중에서 고를 수 있고, 브라우저가 고른 형식으로 저장하지 못하면 PNG로 저장한 뒤 화면에 알려 줍니다.</p>
 </div>
 <div class="border border-slate-200 dark:border-slate-700 rounded-xl p-4 bg-white dark:bg-slate-800">
 <h4 class="font-semibold text-slate-800 dark:text-slate-100 text-sm mb-1">Q. 투명 배경이 있는 PNG를 JPG로 바꾸면 어떻게 되나요?</h4>
@@ -490,24 +490,49 @@
     function handleFileSelect(files) {
       if (!files || files.length === 0) return;
       const file = files[0];
-      originalFileSize = file.size;
-      originalFileName = file.name;
+      document.getElementById('fileInput').value = '';
 
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
           currentRawImage = img;
+          originalFileSize = file.size;
+          originalFileName = file.name;
           document.getElementById('dropZone').classList.add('hidden');
           document.getElementById('converterOptions').classList.remove('hidden');
           document.getElementById('convPlaceholder').classList.add('hidden');
           document.getElementById('receiptSourceFile').textContent = originalFileName;
           executeConversion();
         };
+        // 브라우저가 열 수 없는 파일(예: 일부 브라우저의 HEIC, 이미지가 아닌 파일)
+        img.onerror = () => {
+          showToastNotification('이 브라우저에서 열 수 없는 파일입니다. JPG·PNG·WebP 같은 이미지를 올려 주세요.');
+        };
         img.src = e.target.result;
+      };
+      reader.onerror = () => {
+        showToastNotification('파일을 읽지 못했습니다. 다시 시도해 주세요.');
       };
       reader.readAsDataURL(file);
     }
+
+    // 끌어다 놓기: 쪽 어디에 놓아도 브라우저가 파일을 여는 대신 변환 (드롭존은 테두리로 표시)
+    (function initDragDrop() {
+      const zone = document.getElementById('dropZone');
+      window.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('border-lime-400');
+      });
+      window.addEventListener('dragleave', (e) => {
+        if (!e.relatedTarget) zone.classList.remove('border-lime-400');
+      });
+      window.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('border-lime-400');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) handleFileSelect(e.dataTransfer.files);
+      });
+    })();
 
     function setTargetFormat(fmt) {
       targetFormat = fmt;
@@ -538,7 +563,11 @@
       executeConversion();
     }
 
-    // 100% 클라이언트 캔버스 인코딩 엔진
+    const FORMAT_NAMES = { 'image/webp': 'WEBP', 'image/jpeg': 'JPG', 'image/png': 'PNG', 'image/avif': 'AVIF' };
+    const FORMAT_EXT = { 'image/webp': 'webp', 'image/jpeg': 'jpg', 'image/png': 'png', 'image/avif': 'avif' };
+    let lastFallbackNotice = '';
+
+    // 캔버스 인코딩. 브라우저가 고른 형식을 만들지 못하면 PNG 를 돌려주므로, 실제로 만들어진 형식을 확인해 그대로 저장·표시함
     function executeConversion() {
       if (!currentRawImage) return;
 
@@ -546,8 +575,9 @@
       const canvas = document.getElementById('convCanvas');
       const ctx = canvas.getContext('2d');
 
-      const targetWidth = Math.round(currentRawImage.width * currentScale);
-      const targetHeight = Math.round(currentRawImage.height * currentScale);
+      // 아주 작은 이미지를 줄여도 최소 1px
+      const targetWidth = Math.max(1, Math.round(currentRawImage.width * currentScale));
+      const targetHeight = Math.max(1, Math.round(currentRawImage.height * currentScale));
 
       canvas.width = targetWidth;
       canvas.height = targetHeight;
@@ -562,27 +592,41 @@
 
       ctx.drawImage(currentRawImage, 0, 0, targetWidth, targetHeight);
 
-      // MIME 타입 매핑
-      const mimeTypes = {
-        'webp': 'image/webp',
-        'jpeg': 'image/jpeg',
-        'png': 'image/png',
-        'avif': 'image/avif'
-      };
+      const mimeTypes = { 'webp': 'image/webp', 'jpeg': 'image/jpeg', 'png': 'image/png', 'avif': 'image/avif' };
       const mime = mimeTypes[targetFormat] || 'image/webp';
-
-      // 캔버스 toDataURL / toBlob 연산
       const dataUrl = canvas.toDataURL(mime, quality);
+      const dlBtn = document.getElementById('btnDownloadConverted');
 
-      // 대략적 Base64 크기 계산
-      const convertedBytes = Math.round((dataUrl.length - 22) * 0.75);
+      // 캔버스가 브라우저 한도보다 크면 빈 결과("data:,")가 나옴
+      const actual = dataUrl.startsWith('data:image/') ? dataUrl.slice(5, dataUrl.indexOf(';')) : '';
+      if (!actual) {
+        document.getElementById('convStatusTitle').textContent = '이미지가 너무 커서 변환하지 못했습니다';
+        dlBtn.href = '#';
+        dlBtn.classList.add('opacity-50', 'pointer-events-none');
+        showToastNotification('이미지가 너무 커서 이 브라우저에서 변환할 수 없습니다. 해상도 비율을 줄여 보세요.');
+        return;
+      }
+
+      // 실제 파일 크기 (base64 길이에서 계산)
+      const b64 = dataUrl.slice(dataUrl.indexOf(',') + 1);
+      const padding = b64.endsWith('==') ? 2 : (b64.endsWith('=') ? 1 : 0);
+      const convertedBytes = Math.floor(b64.length * 3 / 4) - padding;
       const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
 
-      // 영수증 카드 갱신
-      document.getElementById('convStatusTitle').textContent = '변환 완료!';
+      const name = FORMAT_NAMES[actual] || actual.replace('image/', '').toUpperCase();
+      const wanted = FORMAT_NAMES[mime];
+      const fellBack = actual !== mime;
+      const lossy = actual === 'image/jpeg' || actual === 'image/webp' || actual === 'image/avif';
+
+      // 영수증 카드 갱신 (품질 값은 JPG·WebP·AVIF 에만 적용됨)
+      document.getElementById('convStatusTitle').textContent = fellBack ? `변환 완료 (${wanted} 대신 ${name})` : '변환 완료!';
       document.getElementById('convProcessTime').textContent = `${elapsed}s`;
-      document.getElementById('receiptTargetFormat').textContent = `${targetFormat.toUpperCase()} (${Math.round(quality * 100)}%)`;
+      document.getElementById('receiptTargetFormat').textContent = fellBack ? `${name} (${wanted} 저장 미지원)` : (lossy ? `${name} (${Math.round(quality * 100)}%)` : name);
       document.getElementById('receiptResolution').textContent = `${targetWidth} x ${targetHeight} px`;
+      if (fellBack && lastFallbackNotice !== mime) {
+        showToastNotification(`이 브라우저는 ${wanted} 저장을 지원하지 않아 ${name}로 저장합니다.`);
+      }
+      lastFallbackNotice = fellBack ? mime : '';
 
       // 용량 변화율
       const origKb = (originalFileSize / 1024).toFixed(1);
@@ -591,13 +635,13 @@
       const diffText = diffPct <= 0 ? `${Math.abs(diffPct)}% 절감 (${origKb}KB → ${newKb}KB)` : `+${diffPct}% 증가 (${origKb}KB → ${newKb}KB)`;
       document.getElementById('receiptSizeDiff').textContent = diffText;
 
-      // 다운로드 링크 세팅
+      // 다운로드 링크 세팅 (확장자 = 실제로 만들어진 형식)
       const baseName = originalFileName.replace(/\.[^/.]+$/, "") || "converted";
-      const ext = targetFormat === 'jpeg' ? 'jpg' : targetFormat;
-      const dlBtn = document.getElementById('btnDownloadConverted');
+      const ext = FORMAT_EXT[actual] || 'png';
       dlBtn.href = dataUrl;
       dlBtn.download = `${baseName}_converted.${ext}`;
       dlBtn.classList.remove('opacity-50', 'pointer-events-none');
+      document.getElementById('btnDownloadText').textContent = `변환된 파일 다운로드 (${name})`;
     }
 
     // 전사 공통 원클릭 결과 복사 & 바이럴 링크
@@ -608,10 +652,14 @@
       const diff = document.getElementById('receiptSizeDiff').textContent;
       const text = `[Convert Hub - 무제한 파일 변환]\n원본: ${src}\n변환 포맷: ${fmt} (${res})\n용량 변화: ${diff}\n보안: 100% 로컬 연산 (서버 전송 0%)\n\n👉 무료 파일 변환기 바로가기: https://convert-hub.enjoy-onepage.com`;
 
+      if (!navigator.clipboard) {
+        showToastNotification('이 브라우저에서는 자동 복사를 할 수 없습니다. 직접 선택해 복사하세요.');
+        return;
+      }
       navigator.clipboard.writeText(text).then(() => {
         showToastNotification('변환 명세 및 바로가기가 복사되었습니다! 🎉');
       }).catch(() => {
-        showToastNotification('결과 복사 완료!');
+        showToastNotification('복사하지 못했습니다. 직접 선택해 복사하세요.');
       });
     }
 
