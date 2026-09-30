@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-<channel>
-  <title>파일 변환 센터 | 서버 업로드 없는 무료 무제한 이미지·포맷 변환기 (Convert Hub)</title>
-  <link>https://convert-hub.enjoy-onepage.com/</link>
-  <description>JPG, PNG, WebP, AVIF, GIF 상호 변환 및 용량 압축. 업로드 대기 시간 0초, 일일 횟수 제한 0회, 100% 브라우저 메모리 로컬 변환 허브입니다.</description>
-  <language>ko-kr</language>
-  <atom:link href="https://convert-hub.enjoy-onepage.com/rss.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Tue, 29 Sep 2026 06:01:02 +0000</lastBuildDate>
-  <item>
-    <title>이용약관 | Convert Hub</title>
-    <link>https://convert-hub.enjoy-onepage.com/terms.html</link>
-    <guid isPermaLink="true">https://convert-hub.enjoy-onepage.com/terms.html</guid>
-    <description>이용약관 | Convert Hub</description>
-    <pubDate>Mon, 14 Sep 2026 11:59:48 +0900</pubDate>
-  </item>
-  <item>
-    <title>서비스 소개 &amp; 변환 기준 | Convert Hub</title>
-    <link>https://convert-hub.enjoy-onepage.com/about.html</link>
-    <guid isPermaLink="true">https://convert-hub.enjoy-onepage.com/about.html</guid>
-    <description>서비스 소개 &amp; 변환 기준 | Convert Hub</description>
-    <pubDate>Mon, 14 Sep 2026 11:59:48 +0900</pubDate>
-  </item>
-  <item>
-    <title>개인정보처리방침 &amp; 100% 로컬 연산 보증서 | Convert Hub</title>
-    <link>https://convert-hub.enjoy-onepage.com/privacy.html</link>
-    <guid isPermaLink="true">https://convert-hub.enjoy-onepage.com/privacy.html</guid>
-    <description>개인정보처리방침 &amp; 100% 로컬 연산 보증서 | Convert Hub</description>
-    <pubDate>Mon, 14 Sep 2026 11:59:48 +0900</pubDate>
-  </item>
-</channel>
+  <channel>
+    <title>파일 변환 센터 | JPG·PNG·WebP 이미지 무료 변환기</title>
+    <link>https://convert-hub.enjoy-onepage.com/</link>
+    <description>JPG·PNG·WebP·AVIF·GIF 상호 변환과 용량 압축을 업로드 없이 브라우저에서 횟수 제한 없이 처리합니다.</description>
+    <language>ko-kr</language>
+    <lastBuildDate>Thu, 01 Oct 2026 03:32:10 +0900</lastBuildDate>
+    <atom:link href="https://convert-hub.enjoy-onepage.com/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>파일 변환 센터 | JPG·PNG·WebP 이미지 무료 변환기</title>
+      <link>https://convert-hub.enjoy-onepage.com/</link>
+      <guid isPermaLink="true">https://convert-hub.enjoy-onepage.com/</guid>
+      <description>JPG·PNG·WebP·AVIF·GIF 상호 변환과 용량 압축을 업로드 없이 브라우저에서 횟수 제한 없이 처리합니다.</description>
+      <pubDate>Thu, 01 Oct 2026 03:32:10 +0900</pubDate>
+    </item>
+    <item>
+      <title>개인정보처리방침 &amp; 100% 로컬 연산 보증서 | Convert Hub</title>
+      <link>https://convert-hub.enjoy-onepage.com/privacy.html</link>
+      <guid isPermaLink="true">https://convert-hub.enjoy-onepage.com/privacy.html</guid>
+      <description>개인정보처리방침 &amp; 100% 로컬 연산 보증서 | Convert Hub</description>
+      <pubDate>Mon, 14 Sep 2026 11:59:48 +0900</pubDate>
+    </item>
+    <item>
+      <title>이용약관 | Convert Hub</title>
+      <link>https://convert-hub.enjoy-onepage.com/terms.html</link>
+      <guid isPermaLink="true">https://convert-hub.enjoy-onepage.com/terms.html</guid>
+      <description>이용약관 | Convert Hub</description>
+      <pubDate>Mon, 14 Sep 2026 11:59:48 +0900</pubDate>
+    </item>
+  </channel>
 </rss>
