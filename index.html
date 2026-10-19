@@ -9,7 +9,7 @@
 <link href="apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>파일 변환 센터 | JPG·PNG·WebP 이미지 무료</title>
-<meta content="JPG·PNG·WebP·GIF·BMP 등 브라우저가 여는 이미지를 WebP·JPG·PNG로 바꾸고," name="description"/>
+<meta content="JPG·PNG·WebP 등 이미지를 브라우저에서 안전하게 WebP·JPG·PNG로 상호 변환하고 용량을 줄이세요." name="description"/>
 <link href="https://convert-hub.enjoy-onepage.com/" rel="canonical"/>
 <meta content="파일 변환 센터 - 100% 무료 무제한 포맷 변환기" property="og:title"/>
 <meta content="이미지를 서버에 올리지 않고 브라우저에서 포맷을 바꾸고 용량을 줄이는 무료 변환기입니다." property="og:description"/>
@@ -569,13 +569,13 @@
     }
 
     function updateQuality(val) {
-      quality = parseInt(val, 10) / 100;
-      document.getElementById('qualityVal').textContent = `${val}%`;
+      quality = Math.max(0.01, Math.min(1.0, (parseInt(val, 10) || 85) / 100));
+      document.getElementById('qualityVal').textContent = `${Math.round(quality * 100)}%`;
       executeConversion();
     }
 
     function setScale(s) {
-      currentScale = s;
+      currentScale = Math.max(0.1, Math.min(2.0, parseFloat(s) || 1.0));
       document.querySelectorAll('.scale-btn').forEach(b => {
         b.classList.remove('border-lime-400', 'bg-lime-400/20', 'text-lime-400', 'font-bold');
         b.classList.add('border-slate-700', 'text-slate-400');
@@ -655,9 +655,9 @@
       lastFallbackNotice = fellBack ? mime : '';
 
       // 용량 변화율
-      const origKb = (originalFileSize / 1024).toFixed(1);
-      const newKb = (convertedBytes / 1024).toFixed(1);
-      const diffPct = originalFileSize > 0 ? Math.round(((convertedBytes - originalFileSize) / originalFileSize) * 100) : 0;
+      const origKb = (Math.max(0, originalFileSize) / 1024).toFixed(1);
+      const newKb = (Math.max(0, convertedBytes) / 1024).toFixed(1);
+      const diffPct = originalFileSize > 0 ? Math.round(((convertedBytes - originalFileSize) / Math.max(1, originalFileSize)) * 100) : 0;
       const diffText = diffPct <= 0 ? `${Math.abs(diffPct)}% 절감 (${origKb}KB → ${newKb}KB)` : `+${diffPct}% 증가 (${origKb}KB → ${newKb}KB)`;
       document.getElementById('receiptSizeDiff').textContent = diffText;
 
